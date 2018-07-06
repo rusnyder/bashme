@@ -15,3 +15,12 @@ _wa() {
   COMPREPLY=( $(compgen -W "$choices" -- "$cur") )
 }
 complete -F _wa wa
+
+ro-version () {
+  pushd "${REDOWL_WORKSPACE}/manifests" >/dev/null
+  git branch -a | grep "remotes/origin/release/" | xargs git grep -B1 -A3 "$@"
+  popd >/dev/null
+}
+
+# Define UI directory for devutils
+export RO_UI_DIR="${REDOWL_WORKSPACE}/the-ui"

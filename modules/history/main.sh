@@ -39,4 +39,4 @@ export PROMPT_COMMAND='history -a ; $PROMPT_COMMAND'
                                         # append commands to history immediately
 
 # With environment configured, invoke the rotator (only rotates when necessary)
-rotate_history
+#rotate_history

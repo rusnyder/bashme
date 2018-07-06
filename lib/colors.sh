@@ -38,7 +38,7 @@ function push()
       eval "$array=(\"$value\")"
     fi
   done
-}
+} # push
 
 function pop()
 {
@@ -50,7 +50,12 @@ function pop()
   else
     return 1
   fi
-}
+} # pop
+
+function escape()
+{
+  echo "$@" | sed -e 's/\([(){}$]\)/\\\1/g'
+} # escape
 
 function colorize()
 {
@@ -59,6 +64,6 @@ function colorize()
     color="__$color"
   fi
   shift 1
-  eval echo -en "\${$color}$@\${__reset}"
-}
+  eval echo -en "\${$color}$(escape "$@")\${__reset}"
+} # colorize
 
