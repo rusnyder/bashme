@@ -2,11 +2,12 @@
 
 # Wrapper to make AWS login slightly less verbose
 export ONELOGIN_USER="russell@redowl.com"
+export AWS_SESSION_DURATION=21600
 function aws-start-session()
 {
   local env="${1:-default}"
   pyenv activate python3
-  if ! onelogin-aws-login --profile "$env" --username "$ONELOGIN_USER" --duration-seconds 21600; then
+  if ! onelogin-aws-login --profile "$env" --username "$ONELOGIN_USER" --duration-seconds $AWS_SESSION_DURATION; then
     : # just ignoring errors
   fi
   pyenv activate python2

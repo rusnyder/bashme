@@ -14,6 +14,7 @@ function load_ini () {
     ini[${#ini[*]} + 1]='}'                       # add the last brace
     eval "$(echo "${ini[*]}")"                    # eval the result
 }
+export -f load_ini
 
 function fetch_jwt()
 {
@@ -49,11 +50,13 @@ function fetch_jwt()
   fi
   echo "$jwt"
 }
+export -f fetch_jwt
 
 function join_by()
 {
   local IFS="$1"; shift; echo "$*";
 }
+export -f join_by
 
 function jwt_profile()
 {
@@ -98,13 +101,17 @@ function jwt_profile()
   url="${prev_url}"
   email="${prev_email}"
   password="${prev_password}"
-  while read fn; do
-    unset -f $fn
-  done < <(declare -F | cut -d' ' -f3 | grep -E '^cfg')
+  declare -F            `# list functions`      \
+    | cut -d' ' -f3     `# grab function name`  \
+    | grep -E '^cfg'    `# select config vars`  \
+    | while read fn; do `# unset each one`      \
+        unset -f $fn
+      done
 
   # Emit the token
   echo "${jwt}"
 }
+export -f jwt_profile
 
 function jwt_header()
 {
@@ -113,4 +120,34 @@ function jwt_header()
   if [[ -z "$jwt" ]]; then return; fi
 
   echo "Authorization: Bearer $(echo "$jwt" | jq --raw-output '.jwt')"
+}
+export -f jwt_header
+
+function grant_access()
+{
+  local user="$1"
+  local env="$2"
+  # Iterate over all IPs in the cluster
+  for ip in $(ssh jenkins-${env}.ro.internal "cat /etc/hosts | grep '$env' | cut -d' ' -f1 | sort -u"); do
+    if host="$(ssh -q -t ${ip} "hostname; sudo usermod -G wheel ${user}")"; then
+      echo "[GRANTED]: $host"
+    else
+      echo "[FAILED]: $host"
+    fi
+  done
+}
+
+function create_user()
+{
+  local user="$1"
+  local env="$2"
+  local pubkey="$3"
+  # Iterate over all IPs in the cluster
+  for ip in $(ssh jenkins-${env}.ro.internal "cat /etc/hosts | grep '$env' | cut -d' ' -f1 | sort -u"); do
+    if host="$(ssh -q -t ${ip} "hostname; sudo useradd ${user}; sudo su -c \"mkdir -p ~/.ssh && chmod 0700 ~/.ssh && echo '${pubkey}' > ~/.ssh/authorized_keys && chmod 0600 ~/.ssh/authorized_keys\" - ${user}")"; then
+      echo "[CREATED]: $host"
+    else
+      echo "[FAILED]: $host"
+    fi
+  done
 }

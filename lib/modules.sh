@@ -13,6 +13,7 @@ function load_module()
   local module="$1"
   # Load the module script only if not yet loaded
   local script="$BASHME_MODULES/${module}/main.sh"
+  local secrets="$BASHME_MODULES/${module}/secrets"
   if ! [[ -f "$script" ]]; then
     log_error "Module '$module' did not contain main.sh! Skipping..."
     return
@@ -21,6 +22,9 @@ function load_module()
     # Time module loads for only for debug
     if [[ "$BASHME_DEBUG" != true ]]; then
       . "$script"
+      if [[ -f "$secrets" ]]; then
+        . "$secrets"
+      fi
     else
       # Create a pipe for saving tier output without interfering
       # with output streams of module (can impact PS1, etc.)
@@ -28,7 +32,7 @@ function load_module()
       trap "rm -f $fd" EXIT SIGINT
 
       # Time script execution, recording results to pipe
-      { time . "$script" ; } 2>&1 &>$fd
+      { time . "$script" && if [[ -f "$secrets" ]]; then . "$secrets"; fi; } 2>&1 &>$fd
       duration=$(cat $fd | grep real | cut -f2 | tr -d '\n')
       rm -f "$fd"
       # Log the module load
