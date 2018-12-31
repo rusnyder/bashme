@@ -9,17 +9,18 @@ function rotate_history()
 {
   local keep=200
   local bash_hist="$HOME/.bash_history"
-  local backup="${bash_hist}.$(date +%Y-%m)"
+  local backup
+  backup="${bash_hist}.$(date +%Y-%m)"
 
-  if [ -s "$bash_hist" -a "$bash_hist" -nt "$backup" ]; then
+  if [[ -s "$bash_hist" ]] && [[ "$bash_hist" -nt "$backup" ]]; then
     # history file is newer then backup
     if [[ -f $backup ]]; then
       # there is already a backup
-      cp -f $bash_hist $backup
+      cp -f "$bash_hist" "$backup"
     else
       # create new backup, leave last few commands and reinitialize
-      mv -f $bash_hist $backup
-      tail -n$keep $backup > $bash_hist
+      mv -f "$bash_hist" "$backup"
+      tail -n$keep "$backup" > "$bash_hist"
       history -r
     fi
   fi

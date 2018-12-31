@@ -19,8 +19,7 @@ function _kubecfg_usage()
 
 function _kubecfg_profiles()
 {
-  ls "${HOME}/.kube/config" \
-    | grep -E '\.yml$' \
+  find "${HOME}/.kube/config" -maxdepth 1 -type f -name "*.yml" \
     | sed -e 's/\.yml//'
 } # _kubecfg_profiles
 

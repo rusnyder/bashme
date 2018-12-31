@@ -1,18 +1,20 @@
 #!/usr/bin/env bash
 
 function load_ini () {
-    local fixed_file=$(cat $1 | sed 's/ = /=/g')  # fix ' = ' to be '='
-    local IFS=$'\n' && ini=( $fixed_file )        # convert to line-array
-    local ini=( ${ini[*]//;*/} )                  # remove comments
-    ini=( ${ini[*]/#[/\}$'\n'cfg.section.} )      # set section prefix
-    ini=( ${ini[*]/%]/ \(} )                      # convert text2function (1)
-    ini=( ${ini[*]/=/=\( } )                      # convert item to array
-    ini=( ${ini[*]/%/ \)} )                       # close array parenthesis
-    ini=( ${ini[*]/%\( \)/\(\) \{} )              # convert text2function (2)
-    ini=( ${ini[*]/%\} \)/\}} )                   # remove extra parenthesis
-    ini[0]=''                                     # remove first element
-    ini[${#ini[*]} + 1]='}'                       # add the last brace
-    eval "$(echo "${ini[*]}")"                    # eval the result
+  local fixed_file IFS ini
+  fixed_file="$(sed 's/ = /=/g' < "$1")"        # fix ' = ' to be '='
+  IFS=$'\n' && ini=( $fixed_file )              # convert to line-array
+  ini=( ${ini[*]//;*/} )                        # remove comments
+  ini=( ${ini[*]/#[/\}$'\n'cfg.section.} )      # set section prefix
+  ini=( ${ini[*]/%]/ \(} )                      # convert text2function (1)
+  ini=( ${ini[*]/=/=\( } )                      # convert item to array
+  ini=( ${ini[*]/%/ \)} )                       # close array parenthesis
+  ini=( ${ini[*]/%\( \)/\(\) \{} )              # convert text2function (2)
+  ini=( ${ini[*]/%\} \)/\}} )                   # remove extra parenthesis
+  ini[0]=''                                     # remove first element
+  ini[${#ini[*]} + 1]='}'                       # add the last brace
+  # shellcheck disable=SC2116
+  eval "$(echo "${ini[*]}")"                    # eval the result
 }
 export -f load_ini
 
@@ -25,13 +27,16 @@ function fetch_jwt()
   local opts="--silent --insecure --fail --show-error"
 
   # Authenticate w/ username and password, then save the session tokens (cookies)
-  local cookies="$(mktemp)"
+  local cookies resp
+  cookies="$(mktemp)"s
+  # shellcheck disable=SC2064
   trap "rm '$cookies'" SIGINT EXIT
-  local resp="$(curl $opts -XPOST "${url}/session/new" \
+  # shellcheck disable=SC2086
+  resp="$(curl $opts -XPOST "${url}/session/new" \
       --header "Content-Type:application/json" \
       --data "${creds}" \
       --cookie-jar "$cookies")"
-  if ! $(echo "$resp" | jq '.' &> /dev/null); then
+  if ! echo "$resp" | jq '.' &> /dev/null; then
     echo "ERROR: Failed to create new session token " >/dev/stderr
     echo "  Params:                                 " >/dev/stderr
     echo "    url:      $url                        " >/dev/stderr
@@ -44,7 +49,9 @@ function fetch_jwt()
   fi
 
   # Fetch the jwt token using the session tokens to authenticate
-  if ! local jwt="$(curl $opts "${url}/api/1/fetch-jwt" --cookie @${cookies})"; then
+  local jwt
+  # shellcheck disable=SC2086
+  if ! jwt="$(curl $opts "${url}/api/1/fetch-jwt" --cookie @${cookies})"; then
     echo "Failed to create new jwt token" >/dev/stderr
     return
   fi
@@ -78,19 +85,19 @@ function jwt_profile()
   if type cfg.section.default &>/dev/null; then
     cfg.section.default
   fi
-  if ! type cfg.section.$profile &>/dev/null; then
+  if ! type "cfg.section.$profile" &>/dev/null; then
     echo "UEBA profile '${profile}' not defined" >/dev/stderr
     return
   fi
-  cfg.section.$profile
+  "cfg.section.$profile"
 
   # Verify that all necessary properties were loaded
-  missing=""
+  local missing
   if [[ -z "$url" ]]; then missing="${missing} url"; fi
   if [[ -z "$email" ]]; then missing="${missing} email"; fi
   if [[ -z "$password" ]]; then missing="${missing} password"; fi
   if [[ -n $missing ]]; then
-    echo "Required fields undefined for profile '${profile}': [$(join_by ',' $missing)]" >/dev/stderr
+    echo "Required fields undefined for profile '${profile}': [$(join_by ',' "$missing")]" >/dev/stderr
     return
   fi
 
@@ -104,8 +111,8 @@ function jwt_profile()
   declare -F            `# list functions`      \
     | cut -d' ' -f3     `# grab function name`  \
     | grep -E '^cfg'    `# select config vars`  \
-    | while read fn; do `# unset each one`      \
-        unset -f $fn
+    | while read -r fn; do `# unset each one`      \
+        unset -f "$fn"
       done
 
   # Emit the token
@@ -116,7 +123,8 @@ export -f jwt_profile
 function jwt_header()
 {
   local profile="${1}"
-  local jwt="$(jwt_profile "${profile}")"
+  local jwt
+  jwt="$(jwt_profile "${profile}")"
   if [[ -z "$jwt" ]]; then return; fi
 
   echo "Authorization: Bearer $(echo "$jwt" | jq --raw-output '.jwt')"
@@ -128,7 +136,8 @@ function grant_access()
   local user="$1"
   local env="$2"
   # Iterate over all IPs in the cluster
-  for ip in $(ssh jenkins-${env}.ro.internal "cat /etc/hosts | grep '$env' | cut -d' ' -f1 | sort -u"); do
+  # shellcheck disable=SC2086,SC2029
+  for ip in $(ssh "jenkins-${env}.ro.internal" "cat /etc/hosts | grep '$env' | cut -d' ' -f1 | sort -u"); do
     if host="$(ssh -q -t ${ip} "hostname; sudo usermod -G wheel ${user}")"; then
       echo "[GRANTED]: $host"
     else
@@ -143,8 +152,10 @@ function create_user()
   local env="$2"
   local pubkey="$3"
   # Iterate over all IPs in the cluster
-  for ip in $(ssh jenkins-${env}.ro.internal "cat /etc/hosts | grep '$env' | cut -d' ' -f1 | sort -u"); do
-    if host="$(ssh -q -t ${ip} "hostname; sudo useradd ${user}; sudo su -c \"mkdir -p ~/.ssh && chmod 0700 ~/.ssh && echo '${pubkey}' > ~/.ssh/authorized_keys && chmod 0600 ~/.ssh/authorized_keys\" - ${user}")"; then
+  # shellcheck disable=SC2086,SC2029
+  for ip in $(ssh "jenkins-${env}.ro.internal" "cat /etc/hosts | grep '$env' | cut -d' ' -f1 | sort -u"); do
+    # shellcheck disable=SC2086,SC2029
+    if host="$(ssh -q -t "${ip}" "hostname; sudo useradd '${user}'; sudo su -c \"mkdir -p ~/.ssh && chmod 0700 ~/.ssh && echo '${pubkey}' > ~/.ssh/authorized_keys && chmod 0600 ~/.ssh/authorized_keys\" - ${user}")"; then
       echo "[CREATED]: $host"
     else
       echo "[FAILED]: $host"

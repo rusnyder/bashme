@@ -3,6 +3,7 @@
 load_module workspace
 
 # Create an alias for JWT token generation
+# shellcheck disable=SC2139
 alias jwtgen="npm run --silent --prefix=\"$REDOWL_WORKSPACE/the-ui/server\" jwtgen -- --cwd=\$(pwd)"
 function __jwtheader()
 {

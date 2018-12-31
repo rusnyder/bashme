@@ -5,4 +5,5 @@
 export PATH="$PATH:$HOME/.rvm/bin"
 
 # Load RVM into a shell session *as a function*
+# shellcheck disable=SC1090
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"

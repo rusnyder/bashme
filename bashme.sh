@@ -20,6 +20,9 @@ export PATH="${BASHME_BIN}:/usr/local/bin:/usr/local/sbin:$PATH"
 # Load all library files
 LIB="${BASHME_HOME}/lib/*.sh"
 for lib in $LIB; do
+  if [[ "$BASHME_DEBUG" == true ]]; then
+    echo "[BASHME] Loading lib: $lib" >/dev/stderr
+  fi
   . "$lib"
 done
 

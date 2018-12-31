@@ -1,3 +1,6 @@
 [submodule "modules/xml/xml2json"]
 	path = modules/xml/xml2json
 	url = https://github.com/hay/xml2json
+[submodule "modules/dircolors/dircolors-solarized"]
+	path = modules/dircolors/dircolors-solarized
+	url = https://github.com/huyz/dircolors-solarized

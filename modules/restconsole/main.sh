@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
+# shellcheck disable=SC2034
 
 _rest()
 {
@@ -9,7 +10,7 @@ _rest()
   opts="--help --verbose --version"
 
   if [[ ${cur} == -* ]] ; then
-    COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+    COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
     return 0
   fi
 }

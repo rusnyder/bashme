@@ -1,4 +1,5 @@
 #! /usr/bin/env bash
+# shellcheck disable=SC2034
 
 load_module git
 
@@ -18,9 +19,10 @@ build_ps1() {
   local git="${green}\$(parse_git_branch)"
   local prompt="${grey}→ "
 
-  echo "\n${timestamp} ${dir} ${git}\n${prompt}"
+  echo -e "\n${timestamp} ${dir} ${git}\n${prompt}"
 }
 
 # Variables
 
-export PS1="$(build_ps1)"
+PS1="$(build_ps1)"
+export PS1

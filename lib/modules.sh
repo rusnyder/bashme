@@ -81,7 +81,14 @@ function load_bin()
 # Load all modules
 function _load_all_modules()
 {
-  for module in $(find "$BASHME_MODULES" -type d -mindepth 1 -maxdepth 1 | xargs basename); do
+  for module in $(find "$BASHME_MODULES" -mindepth 1 -maxdepth 1 -type d | xargs -I{} basename {}); do
+    # Set some common variables accessible in module scripts
+    MODULE_DIR="$BASHME_MODULES/${module}"
+
+    # Load the module
     load_module $module
+
+    # Unset the variables loaded for the modules
+    unset MODULE_DIR
   done
 } # _load_all_modules
