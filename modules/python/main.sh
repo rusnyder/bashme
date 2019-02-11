@@ -1,6 +1,18 @@
 #! /usr/bin/env bash
 
+# Ensure certain gcc flags are set to build appropriately
+export LDFLAGS="-L/usr/local/opt/zlib/lib"
+export CPPFLAGS="-I/usr/local/opt/zlib/include"
+
+# NOTE: This relies entirely on pyenv for python version management.
+#       If pyenv has not been installed, this will fail fast
+if ! hash pyenv &> /dev/null; then
+  echo "[ERROR]: pyenv is not installed, so python version will not be configured"
+  return
+fi
+
 # Load pyenv, if necessary
+PYENV_ROOT="${PYENV_ROOT:-$(pyenv root)}"
 if [ -z "$PYENV_ROOT" ]; then
   if [ -d "$HOME/.pyenv" ]; then
     export PYENV_ROOT="$HOME/.pyenv"
@@ -21,13 +33,17 @@ for dir in "${WORKON_HOME}" "${PROJECT_HOME}"; do
 done
 eval "$(pyenv init -)"
 
+# Setup some pipenv aliases
+alias prun='pipenv run'
+alias pshell='pipenv shell'
+
 # Skip virtualenv-init command, as it causes conflicts w/ init command
 #if which pyenv-virtualenv-init > /dev/null; then
 #  eval "$(pyenv virtualenv-init -)"
 #fi
 
 # Activate the default python interpreter
-export PYENV_VIRTUALENV_DISABLE_PROMPT=1
-if ! pyenv activate --quiet "${DEFAULT_PYENV_VIRTUALENV:-python2}"; then
-  echo "[ERROR] pyenv-virtualenv may not installed" >/dev/stderr
-fi
+#export PYENV_VIRTUALENV_DISABLE_PROMPT=1
+#if ! pyenv activate --quiet "${DEFAULT_PYENV_VIRTUALENV:-python2}"; then
+#  echo "[ERROR] pyenv-virtualenv may not installed" >/dev/stderr
+#fi
