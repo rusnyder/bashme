@@ -1,5 +1,16 @@
 #! /usr/bin/env bash
 
+# Helper for coreutils functions (better OSX interop)
+declare -a __ALIASED_COREUTILS
+function require_coreutil()
+{
+  local cmd="$1"
+  if hash g${cmd} &>/dev/null; then
+    alias ${cmd}=g${cmd}
+    __ALIASED_COREUTILS+=("$cmd")
+  fi
+} # require_coreutils
+
 # Single-time import dependency resolution
 declare -A __LOADED_MODULES
 function is_module_loaded()

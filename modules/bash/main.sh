@@ -1,17 +1,13 @@
 #! /usr/bin/env bash
 
-# GNU coreutils hedging
-case "$(uname -s)" in
-  Darwin*) if $(hash gls &>/dev/null); then LSCMD='gls'; else LSCMD='ls'; fi ;;
-  *)       LSCMD='ls' ;;
-esac
+require_coreutil ls
 
 # Aliases
 
 alias cp='cp -iv'                           # Preferred 'cp' implementation
 alias mv='mv -iv'                           # Preferred 'mv' implementation
 alias mkdir='mkdir -pv'                     # Preferred 'mkdir' implementation
-alias ll="${LSCMD} -FGlAhp --color=auto"    # Preferred 'ls' implementation
+alias ll='ls -FGlAhp --color=auto'          # Preferred 'ls' implementation
 alias less='less -RSc'                      # Preferred 'less' implementation
 cd() { builtin cd "$@" && ll; }             # Always list directory contents upon 'cd'
 alias tailf='tail -f'
@@ -33,6 +29,3 @@ export BLOCKSIZE=1k
 
 # Enable colors in command line tools by default
 export CLICOLOR=true
-
-# Unset local vars
-unset LSCMD
