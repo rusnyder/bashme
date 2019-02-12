@@ -18,8 +18,14 @@ build_ps1() {
   local dir="${cyan}\w"
   local git="${green}\$(parse_git_branch)"
   local prompt="${grey}→ "
+  local venv=""
 
-  echo -e "\n${timestamp} ${dir} ${git}\n${prompt}"
+  # Check for python virtualenv
+  if [[ -n "$VIRTUAL_ENV" ]]; then
+    venv="${red}[venv: $(basename "$(cat "${VIRTUAL_ENV}/.project")")]"
+  fi
+
+  echo -e "\n${timestamp} ${dir}${git} ${venv}\n${prompt}"
 }
 
 # Variables

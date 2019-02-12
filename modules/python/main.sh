@@ -35,7 +35,7 @@ eval "$(pyenv init -)"
 
 # Setup some pipenv aliases
 alias prun='pipenv run'
-alias pshell='pipenv shell'
+alias pshell='pipenv shell --fancy'
 
 # Skip virtualenv-init command, as it causes conflicts w/ init command
 #if which pyenv-virtualenv-init > /dev/null; then
