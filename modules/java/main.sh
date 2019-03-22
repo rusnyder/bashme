@@ -1,5 +1,10 @@
 #! /usr/bin/env bash
 
+# Load jenv, if installed
+if hash jenv >/dev/null; then
+  eval "$(jenv init -)"
+fi
+
 # Locate java home
 if [ -f "/usr/libexec/java_home" ]; then
   JAVA_HOME="$(/usr/libexec/java_home)"

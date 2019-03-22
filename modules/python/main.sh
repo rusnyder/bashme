@@ -33,6 +33,9 @@ for dir in "${WORKON_HOME}" "${PROJECT_HOME}"; do
 done
 eval "$(pyenv init -)"
 
+# Pyenv alias, for installing new python versions
+alias pyinstall='CFLAGS="-I$(xcrun --show-sdk-path)/usr/include" pyenv install -v'
+
 # Setup some pipenv aliases
 alias prun='pipenv run'
 alias pshell='pipenv shell --fancy'
@@ -47,3 +50,6 @@ alias pshell='pipenv shell --fancy'
 #if ! pyenv activate --quiet "${DEFAULT_PYENV_VIRTUALENV:-python2}"; then
 #  echo "[ERROR] pyenv-virtualenv may not installed" >/dev/stderr
 #fi
+
+# Apache Airflow has a GPL-licensed dependency that we need to skip
+export SLUGIFY_USES_TEXT_UNIDECODE=yes
