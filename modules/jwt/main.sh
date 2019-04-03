@@ -125,7 +125,7 @@ function jwt_header()
 {
   local profile="$1"
   local jwt
-  jwt="$(jwt_token "${profile}")"
+  jwt="$(jwt "${profile}")"
   if [[ -z "$jwt" ]]; then return; fi
 
   echo "Authorization: Bearer $jwt"
