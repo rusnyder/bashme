@@ -1,5 +1,7 @@
 # BashMe
 
+[![Build Status](https://travis-ci.com/rusnyder/bashme.svg?branch=master)](https://travis-ci.com/rusnyder/bashme)
+
 **BashMe** is my personal collection of commands and scripts for Bash 4+.
 
 It's primitive to a fault, and comprises the minimal set of utilities that
