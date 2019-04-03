@@ -2,4 +2,4 @@ language: shell
 
 script:
   # TODO: Currently only testing modules - add lib as well by removing 'modules/' prefix
-  - bash -c 'shopt -s globstar; shellcheck modules/**/*.sh'
+  - bash -c 'shopt -s globstar; shellcheck **/*.sh'

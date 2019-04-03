@@ -23,6 +23,7 @@ for lib in $LIB; do
   if [[ "$BASHME_DEBUG" == true ]]; then
     echo "[BASHME] Loading lib: $lib" >/dev/stderr
   fi
+  # shellcheck disable=SC1090
   . "$lib"
 done
 

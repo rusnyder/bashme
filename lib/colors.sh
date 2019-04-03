@@ -27,33 +27,9 @@ for color in "${!__colors[@]}"; do
   eval "__ps1_${color}=\"\\[\\e[${__colors[$color]}m\\]\""
 done
 
-function push()
-{
-  local array="$1"
-  shift 1
-  for value in $@; do
-    if [[ -v $array[@] ]]; then
-      eval "$array+=(\"$value\")"
-    else
-      eval "$array=(\"$value\")"
-    fi
-  done
-} # push
-
-function pop()
-{
-  local array="$1"
-  if [[ -v $array[@] ]]; then
-    index=($(eval "echo \${!$array[@]}"))
-    eval "echo \${$array[\${index[@]: -1}]}"
-    unset "$array[\${index[@]: -1}]"
-  else
-    return 1
-  fi
-} # pop
-
 function escape()
 {
+  # shellcheck disable=SC2001
   echo "$@" | sed -e 's/\([(){}$]\)/\\\1/g'
 } # escape
 
