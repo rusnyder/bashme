@@ -14,6 +14,6 @@ _wa() {
   local choices
   choices="$(/usr/bin/find "$ARCEO_WORKSPACE" -mindepth 1 -maxdepth 1 -type d | xargs basename)"
 
-  COMPREPLY=( $(compgen -W "$choices" -- "$cur") )
+  mapfile -t COMPREPLY < <(compgen -W "$choices" -- "$cur")
 }
 complete -F _wa wa

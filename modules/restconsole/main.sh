@@ -32,9 +32,11 @@ _rest()
 {
   local cur="${COMP_WORDS[COMP_CWORD]}"
   local choices
-  choices="$(/usr/bin/find "$RESTCONSOLE_HOME" -mindepth 1 -maxdepth 1 -type f | xargs basename | sed -e 's/\.[^.]\{1,\}$//')"
+  choices="$(/usr/bin/find "$RESTCONSOLE_HOME" \
+    -mindepth 1 -maxdepth 1 -type f -exec basename {} \; \
+    | sed -e 's/\.[^.]\{1,\}$//')"
 
-  COMPREPLY=( $(compgen -W "${choices}" -- "${cur}") )
+  mapfile -t COMPREPLY < <(compgen -W "${choices}" -- "${cur}")
 } # _rest (completion)
 
 complete -F _rest rest

@@ -4,7 +4,7 @@ export KUBECFG_HOME="${HOME}/.kube/config"
 
 function _kubecfg_usage()
 {
-  echo <<- EOF
+  cat <<- EOF
 
 	Usage: kubecfg <command> [OPTIONS]
 
