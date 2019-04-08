@@ -20,3 +20,13 @@ function load_ini () {
 }
 export -f load_ini
 
+function ini_to_json() {
+  python - <<-EOF
+	import configparser, json, sys
+	config = configparser.ConfigParser(default_section='default')
+	config.read('$HOME/.microsoft/credentials')
+	as_dict = dict([(section, dict(config[section])) for section in config.sections() + [config.default_section]])
+	sys.stdout.write(json.dumps(as_dict))
+	EOF
+}
+export -f ini_to_json

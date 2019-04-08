@@ -45,12 +45,6 @@ function _fetch_auth_token()
 }
 export -f _fetch_auth_token
 
-function _join_by()
-{
-  local IFS="$1"; shift; echo "$*";
-}
-export -f _join_by
-
 function _fetch_auth_token_for_profile()
 {
   local endpoint="${1}"
@@ -84,7 +78,7 @@ function _fetch_auth_token_for_profile()
   if [[ -z "$username" ]]; then missing="${missing} username"; fi
   if [[ -z "$password" ]]; then missing="${missing} password"; fi
   if [[ -n $missing ]]; then
-    echo "Required fields undefined for profile '${profile}': [$(_join_by ',' "$missing")]" >/dev/stderr
+    echo "Required fields undefined for profile '${profile}': [$(join_by ',' "$missing")]" >/dev/stderr
     return
   fi
 
