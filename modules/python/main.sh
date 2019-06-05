@@ -1,8 +1,8 @@
 #! /usr/bin/env bash
 
 # Ensure certain gcc flags are set to build appropriately
-export LDFLAGS="-L/usr/local/opt/zlib/lib"
-export CPPFLAGS="-I/usr/local/opt/zlib/include"
+export LDFLAGS="-L/usr/local/opt/zlib/lib -L/usr/local/opt/sqlite/lib"
+export CPPFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/sqlite/include"
 
 # NOTE: This relies entirely on pyenv for python version management.
 #       If pyenv has not been installed, this will fail fast

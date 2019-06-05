@@ -12,7 +12,8 @@ function nvm_start()
 }
 
 # Auto-load nvm for non-interactive shells
-case "$-" in
-*i*)  ;;
-*)	  nvm_start ;;
-esac
+#case "$-" in
+#*i*)  ;;
+#*)	  nvm_start ;;
+#esac
+nvm_start
