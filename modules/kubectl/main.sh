@@ -53,4 +53,4 @@ function kubecfg()
 } # kubecfg
 
 # Activate the default profile
-kubecfg set default
+#kubecfg set default

@@ -5,7 +5,7 @@ function _log()
   local color="$1"
   local level="$2"
   shift 2
-  echo \
+  echo -e \
     "$(colorize "white" "(bashme)")" \
     "$(colorize "$color" "[$(echo "$level" | tr '[:lower:]' '[:upper:]')]")" \
     "$@" >/dev/stderr
