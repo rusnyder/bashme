@@ -33,12 +33,13 @@ function load_module()
   if ! is_module_loaded "$module"; then
     # Time module loads for only for debug
     if [[ "$BASHME_DEBUG" != true ]]; then
-      # shellcheck source=/dev/null
-      . "$script"
+      # Load secrets first so they may be used by module
       if [[ -f "$secrets" ]]; then
         # shellcheck source=/dev/null
         . "$secrets"
       fi
+      # shellcheck source=/dev/null
+      . "$script"
     else
       # Create a pipe for saving tier output without interfering
       # with output streams of module (can impact PS1, etc.)
@@ -48,7 +49,7 @@ function load_module()
 
       # Time script execution, recording results to pipe
       # shellcheck source=/dev/null
-      { time . "$script" && if [[ -f "$secrets" ]]; then . "$secrets"; fi; } &>"$fd"
+      { time if [[ -f "$secrets" ]]; then . "$secrets"; fi && . "$script"; } &>"$fd"
       duration="$(grep real "$fd" | cut -f2 | tr -d '\n')"
       rm -f "$fd"
       # Log the module load
