@@ -4,3 +4,6 @@
 [submodule "modules/dircolors/dircolors-solarized"]
 	path = modules/dircolors/dircolors-solarized
 	url = https://github.com/huyz/dircolors-solarized
+[submodule "modules/github_markdown_toc/github-markdown-toc"]
+	path = modules/github_markdown_toc/github-markdown-toc
+	url = https://github.com/ekalinin/github-markdown-toc
