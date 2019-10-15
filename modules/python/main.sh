@@ -41,9 +41,9 @@ alias prun='pipenv run'
 alias pshell='pipenv shell --fancy'
 
 # Skip virtualenv-init command, as it causes conflicts w/ init command
-#if which pyenv-virtualenv-init > /dev/null; then
-#  eval "$(pyenv virtualenv-init -)"
-#fi
+if pyenv commands | grep virtualenv-init > /dev/null; then
+  eval "$(pyenv virtualenv-init -)"
+fi
 
 # Activate the default python interpreter
 #export PYENV_VIRTUALENV_DISABLE_PROMPT=1

@@ -1,5 +1,8 @@
 #! /usr/bin/env bash
 
+# Enable bash completion for AWS CLI
+complete -C "$(command -v aws_completer)" aws
+
 # Wrapper to make AWS login slightly less verbose
 export ONELOGIN_USER="russell@redowl.com"
 export AWS_SESSION_DURATION=21600

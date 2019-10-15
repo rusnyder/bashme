@@ -54,3 +54,7 @@ function kubecfg()
 
 # Activate the default profile
 #kubecfg set default
+
+# Add bash completion
+# shellcheck disable=SC1090
+source <(kubectl completion bash)
