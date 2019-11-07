@@ -1,6 +1,9 @@
 #! /usr/bin/env bash
 
 # Ensure certain gcc flags are set to build appropriately
+if [[ $(uname | tr '[:upper:]' '[:lower:]') == 'darwin' ]]; then
+  export CPATH="/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/"
+fi
 export LDFLAGS="-L/usr/local/opt/zlib/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl/lib"
 export CPPFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/sqlite/include -I/usr/local/opt/openssl/include"
 
