@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+#/usr/local/bin/terraform "$@"
+AWS_PROFILE=opsadmin /usr/local/bin/terraform "$@"
+#AWS_PROFILE=opsadmin /usr/local/bin/terraform "$@"
+#AWS_PROFILE=opsadmin TF_VAR_AWS_PROFILE=opsadmin /usr/local/bin/terraform "$@"
+#AWS_PROFILE=ops TF_VAR_AWS_PROFILE=ops /usr/local/bin/terraform "$@"

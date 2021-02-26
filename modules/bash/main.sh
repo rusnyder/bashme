@@ -9,7 +9,7 @@ alias mv='mv -iv'                           # Preferred 'mv' implementation
 alias mkdir='mkdir -pv'                     # Preferred 'mkdir' implementation
 alias ll='ls -FGlAhp --color=auto'          # Preferred 'ls' implementation
 alias less='less -RSc'                      # Preferred 'less' implementation
-cd() { builtin cd "$@" && ll; }             # Always list directory contents upon 'cd'
+#cd() { builtin cd "$@" && ll; }             # Always list directory contents upon 'cd'
 alias tailf='tail -f'
 alias sudoedit='sudo vim'
 

@@ -12,7 +12,7 @@ wa () { cd "$ARCEO_WORKSPACE/$1" || return; }
 _wa() {
   local cur="${COMP_WORDS[COMP_CWORD]}"
   local choices
-  choices="$(/usr/bin/find "$ARCEO_WORKSPACE" -mindepth 1 -maxdepth 1 -type d | xargs basename)"
+  choices="$(/usr/bin/find "$ARCEO_WORKSPACE" -mindepth 1 -maxdepth 1 -type d | xargs -I {} basename {})"
 
   mapfile -t COMPREPLY < <(compgen -W "$choices" -- "$cur")
 }

@@ -23,3 +23,6 @@ function __docker_cmd()
 } # __docker_cmd
 
 alias docker-cmd="__docker_cmd"
+
+## Docker compose
+alias dca='docker-compose $(ls docker-compose*.yml | sort -r | xargs | sed -e "s/\(^\| \)/\1-f /g")'

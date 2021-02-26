@@ -1,11 +1,20 @@
 #! /usr/bin/env bash
 
 # Ensure certain gcc flags are set to build appropriately
-if [[ $(uname | tr '[:upper:]' '[:lower:]') == 'darwin' ]]; then
-  export CPATH="/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include/"
+CPATH="$(xcrun --show-sdk-path)/usr/include/"
+export CPATH
+for lib in openssl zlib sqlite bzip2 ncurses; do
+  export CFLAGS="$CFLAGS -I/usr/local/opt/${lib}/include"
+  export LDFLAGS="$LDFLAGS -L/usr/local/opt/${lib}/lib"
+done
+export CPPFLAGS="$CFLAGS"
+DYLD_FALLBACK_LIBRARY_PATH="$(pg_config --libdir)/:$DYLD_FALLBACK_LIBRARY_PATH"
+export DYLD_FALLBACK_LIBRARY_PATH
+
+# Ensure OpenBLAS install is identified for Numpy (if installed)
+if [ -d "/usr/local/opt/openblas" ]; then
+  export OPENBLAS="/usr/local/opt/openblas"
 fi
-export LDFLAGS="-L/usr/local/opt/zlib/lib -L/usr/local/opt/sqlite/lib -L/usr/local/opt/openssl/lib"
-export CPPFLAGS="-I/usr/local/opt/zlib/include -I/usr/local/opt/sqlite/include -I/usr/local/opt/openssl/include"
 
 # NOTE: This relies entirely on pyenv for python version management.
 #       If pyenv has not been installed, this will fail fast
@@ -56,3 +65,4 @@ fi
 
 # Apache Airflow has a GPL-licensed dependency that we need to skip
 export SLUGIFY_USES_TEXT_UNIDECODE=yes
+
