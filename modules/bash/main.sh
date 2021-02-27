@@ -29,3 +29,10 @@ export BLOCKSIZE=1k
 
 # Enable colors in command line tools by default
 export CLICOLOR=true
+
+# Run shellcheck from docker on M1 Macs (don't yet support shellcheck)
+if [ "$(uname -m)" = "arm64" ]; then
+  load_bin bash scripts/shellcheck
+else
+  rm "${BASHME_BIN}/shellcheck"
+fi
