@@ -5,7 +5,7 @@ load_module postgres
 # Ensure certain gcc flags are set to build appropriately
 CPATH="$(xcrun --show-sdk-path)/usr/include/"
 export CPATH
-for lib in openssl zlib sqlite bzip2 ncurses; do
+for lib in openssl zlib sqlite bzip2 xz ncurses; do
   export CFLAGS="$CFLAGS -I${BREW_PREFIX}/opt/${lib}/include"
   export LDFLAGS="$LDFLAGS -L${BREW_PREFIX}/opt/${lib}/lib"
 done

@@ -74,7 +74,7 @@ function load_bin()
   local name link target
   name="${3:-$(basename "$path")}"
   link="${BASHME_BIN}/${name}"
-  target="$(realpath --relative-to="${BASHME_BIN}" "$path")"
+  target="$(grealpath --relative-to="${BASHME_BIN}" "$path")"
   if [[ -e "$link" ]]; then
     if ! [[ -L "$link" ]]; then
       log_error "Conflicting non-link file exists in BASHME_BIN ($link); skipping link creation for module: $module"
