@@ -1,13 +1,13 @@
 #! /usr/bin/env bash
 
 # Load jenv, if installed
-if hash jenv >/dev/null; then
+if hash jenv &>/dev/null; then
   eval "$(jenv init -)"
 fi
 
 # Locate java home
 if [ -f "/usr/libexec/java_home" ]; then
-  JAVA_HOME="$(/usr/libexec/java_home)"
+  JAVA_HOME="$(/usr/libexec/java_home 2>/dev/null)"
 elif hash update-alternatives; then
   JAVA_HOME="$(update-alternatives --query java \
     | grep -E '^Best:' \

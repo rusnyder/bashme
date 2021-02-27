@@ -57,4 +57,4 @@ git_find_lobs() {
 export -f git_find_lobs
 
 # Variables
-export PATH="/usr/local/git/bin:$PATH"
+export PATH="${BREW_PREFIX}/git/bin:$PATH"

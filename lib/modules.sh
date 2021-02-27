@@ -49,7 +49,7 @@ function load_module()
 
       # Time script execution, recording results to pipe
       # shellcheck source=/dev/null
-      { time if [[ -f "$secrets" ]]; then . "$secrets"; fi && . "$script"; } &>"$fd"
+      { time if [[ -f "$secrets" ]]; then . "$secrets"; fi && . "$script" 2>&1; } 2> "$fd"
       duration="$(grep real "$fd" | cut -f2 | tr -d '\n')"
       rm -f "$fd"
       # Log the module load

@@ -14,8 +14,22 @@ if [[ "$BASHME_ENABLE" != true ]]; then
   return
 fi
 
-# Initialize the path within reason
-export PATH="${BASHME_BIN}:/usr/local/bin:/usr/local/sbin:$PATH"
+# Load homebrew onto path first off (almost all modules depend on it)
+for cmd in brew /usr/local/bin/brew /opt/homebrew/bin/brew; do
+  if hash $cmd &>/dev/null; then
+    BREW="$cmd"
+  fi
+done
+if [ -z "$BREW" ]; then
+  echo "Unable to locate Homebrew install; please install Homebrew first."
+fi
+BREW_PREFIX="$($BREW --prefix)"
+export PATH="${BREW_PREFIX}/bin:${BREW_PREFIX}/sbin:$PATH"
+unset BREW
+export BREW_PREFIX
+
+# Load bashme scripts onto the path
+export PATH="${BASHME_BIN}:${PATH}"
 
 # Load all library files
 LIB="${BASHME_HOME}/lib/*.sh"

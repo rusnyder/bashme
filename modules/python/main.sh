@@ -1,19 +1,21 @@
 #! /usr/bin/env bash
 
+load_module postgres
+
 # Ensure certain gcc flags are set to build appropriately
 CPATH="$(xcrun --show-sdk-path)/usr/include/"
 export CPATH
 for lib in openssl zlib sqlite bzip2 ncurses; do
-  export CFLAGS="$CFLAGS -I/usr/local/opt/${lib}/include"
-  export LDFLAGS="$LDFLAGS -L/usr/local/opt/${lib}/lib"
+  export CFLAGS="$CFLAGS -I${BREW_PREFIX}/opt/${lib}/include"
+  export LDFLAGS="$LDFLAGS -L${BREW_PREFIX}/opt/${lib}/lib"
 done
 export CPPFLAGS="$CFLAGS"
 DYLD_FALLBACK_LIBRARY_PATH="$(pg_config --libdir)/:$DYLD_FALLBACK_LIBRARY_PATH"
 export DYLD_FALLBACK_LIBRARY_PATH
 
 # Ensure OpenBLAS install is identified for Numpy (if installed)
-if [ -d "/usr/local/opt/openblas" ]; then
-  export OPENBLAS="/usr/local/opt/openblas"
+if [ -d "${BREW_PREFIX}/opt/openblas" ]; then
+  export OPENBLAS="${BREW_PREFIX}/opt/openblas"
 fi
 
 # NOTE: This relies entirely on pyenv for python version management.

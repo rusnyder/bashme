@@ -20,7 +20,7 @@ fi
 # Load the rest of the bash completions
 for completions in \
     /etc/bash_completion \
-    /usr/local/etc/bash_completion \
+    ${BREW_PREFIX}/etc/bash_completion \
     ; do
   # shellcheck source=/dev/null
   [ -f $completions ] && . $completions

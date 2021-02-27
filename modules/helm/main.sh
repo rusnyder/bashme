@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
 # Put Helm 2 on path (can be removed once we upgarde to helm 3)
-#export PATH="/usr/local/opt/helm@2/bin:$PATH"
+#export PATH="${BREW_PREFIX}/opt/helm@2/bin:$PATH"
 
 # Load bash completion
 # shellcheck disable=SC1090
