@@ -15,14 +15,16 @@ if [[ "$BASHME_ENABLE" != true ]]; then
 fi
 
 # Load homebrew onto path first off (almost all modules depend on it)
-for cmd in brew /usr/local/bin/brew /opt/homebrew/bin/brew; do
-  if hash $cmd &>/dev/null; then
-    BREW="$cmd"
-  fi
-done
-if [ -z "$BREW" ]; then
+case "$(uname -m)" in
+  # M1 Mac running native (ARM) terminal
+  arm64) BREW=/opt/homebrew/bin/brew ;;
+  # Intel Mac or M1 Mac running Rosetta terminal
+  x86_64) BREW=/usr/local/bin/brew ;;
+esac
+if ! hash $BREW &>/dev/null; then
   echo "Unable to locate Homebrew install; please install Homebrew first."
 fi
+
 BREW_PREFIX="$($BREW --prefix)"
 export PATH="${BREW_PREFIX}/bin:${BREW_PREFIX}/sbin:$PATH"
 unset BREW

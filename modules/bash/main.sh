@@ -7,7 +7,7 @@ require_coreutil ls
 alias cp='cp -iv'                           # Preferred 'cp' implementation
 alias mv='mv -iv'                           # Preferred 'mv' implementation
 alias mkdir='mkdir -pv'                     # Preferred 'mkdir' implementation
-alias ll='ls -FGlAhp --color=auto'          # Preferred 'ls' implementation
+alias ll='gls -FGlAhp --color=auto'          # Preferred 'ls' implementation
 alias less='less -RSc'                      # Preferred 'less' implementation
 #cd() { builtin cd "$@" && ll; }             # Always list directory contents upon 'cd'
 alias tailf='tail -f'
@@ -33,6 +33,4 @@ export CLICOLOR=true
 # Run shellcheck from docker on M1 Macs (don't yet support shellcheck)
 if [ "$(uname -m)" = "arm64" ]; then
   load_bin bash scripts/shellcheck
-else
-  rm "${BASHME_BIN}/shellcheck"
 fi

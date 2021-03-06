@@ -5,7 +5,7 @@ load_module postgres
 # Ensure certain gcc flags are set to build appropriately
 CPATH="$(xcrun --show-sdk-path)/usr/include/"
 export CPATH
-for lib in openssl zlib sqlite bzip2 xz ncurses; do
+for lib in openssl zlib sqlite bzip2 xz libffi ncurses tcl-tk; do
   export CFLAGS="$CFLAGS -I${BREW_PREFIX}/opt/${lib}/include"
   export LDFLAGS="$LDFLAGS -L${BREW_PREFIX}/opt/${lib}/lib"
 done
@@ -25,16 +25,26 @@ if ! hash pyenv &> /dev/null; then
   return
 fi
 
-# Load pyenv, if necessary
-PYENV_ROOT="${PYENV_ROOT:-$(pyenv root)}"
-if [ -z "$PYENV_ROOT" ]; then
-  if [ -d "$HOME/.pyenv" ]; then
-    export PYENV_ROOT="$HOME/.pyenv"
-  else
-    echo "[ERROR] No PYENV_ROOT found, and unable to locate pyenv install" >/dev/stderr
-    return
-  fi
+# Ensure pyenv is installed
+if ! hash pyenv &>/dev/null; then
+  log_error "Unable to locate pyenv install"
 fi
+
+# Use different pyenv and poetry roots for M1 ARM to maintain separate python installs
+ARCH="$(uname -m)"
+case "$ARCH" in
+  arm64)
+    export PYENV_ROOT="$HOME/.pyenv-$ARCH"
+    export POETRY_VIRTUALENVS_PATH="$HOME/Library/Caches/pypoetry/virtualenvs-$ARCH"
+    ;;
+  x86_64)
+    # Allow default poetry path
+    export PYENV_ROOT="$HOME/.pyenv"
+    ;;
+  *)
+    log_error "Unsupported arch '$ARCH'; skipping pyenv/poetry setup"
+    ;;
+esac
 export PATH="$PYENV_ROOT/bin:$PATH"
 
 # Init the pyenv-virtualenv manager

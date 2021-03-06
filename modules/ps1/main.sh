@@ -14,6 +14,7 @@ build_ps1() {
   local gold="\[\e[0;33m\]"
 
   # Text
+  local arch="${red}[$(uname -m)]"
   local timestamp="${gold}[\D{%F %T}]"
   local dir="${cyan}\w"
   local git="${green}\$(parse_git_branch)"
@@ -25,7 +26,7 @@ build_ps1() {
     venv="${red}[venv: $(basename "$(cat "${VIRTUAL_ENV}/.project")")]"
   fi
 
-  echo -e "\n${timestamp} ${dir}${git} ${venv}\n${prompt}"
+  echo -e "\n${arch} ${timestamp} ${dir}${git} ${venv}\n${prompt}"
 }
 
 # Variables
