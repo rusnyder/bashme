@@ -14,7 +14,8 @@ build_ps1() {
   local gold="\[\e[0;33m\]"
 
   # Text
-  local arch="${red}[$(uname -m)]"
+  ARCH="$(uname -m)"
+  local arch="${red}[$ARCH]"
   local timestamp="${gold}[\D{%F %T}]"
   local dir="${cyan}\w"
   local git="${green}\$(parse_git_branch)"
