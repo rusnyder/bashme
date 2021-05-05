@@ -5,9 +5,11 @@ load_module postgres
 # Ensure certain gcc flags are set to build appropriately
 CPATH="$(xcrun --show-sdk-path)/usr/include/"
 export CPATH
-for lib in openssl zlib sqlite bzip2 xz libffi ncurses tcl-tk; do
-  export CFLAGS="$CFLAGS -I${BREW_PREFIX}/opt/${lib}/include"
-  export LDFLAGS="$LDFLAGS -L${BREW_PREFIX}/opt/${lib}/lib"
+for lib in openssl zlib sqlite bzip2 xz libffi ncurses tcl-tk icu4c; do
+  if [ -e "${BREW_PREFIX}/opt/${lib}" ]; then
+    export CFLAGS="$CFLAGS -I${BREW_PREFIX}/opt/${lib}/include"
+    export LDFLAGS="$LDFLAGS -L${BREW_PREFIX}/opt/${lib}/lib"
+  fi
 done
 export CPPFLAGS="$CFLAGS"
 DYLD_FALLBACK_LIBRARY_PATH="$(pg_config --libdir)/:$DYLD_FALLBACK_LIBRARY_PATH"
@@ -35,7 +37,7 @@ ARCH="$(uname -m)"
 case "$ARCH" in
   arm64)
     export PYENV_ROOT="$HOME/.pyenv-$ARCH"
-    export POETRY_VIRTUALENVS_PATH="$HOME/Library/Caches/pypoetry/virtualenvs-$ARCH"
+    export POETRY_CACHE_DIR="$HOME/Library/Caches/pypoetry-$ARCH"
     ;;
   x86_64)
     # Allow default poetry path

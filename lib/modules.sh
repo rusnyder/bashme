@@ -96,6 +96,13 @@ function load_bin()
   fi
 } # load_bin
 
+# Removes a script from the active PATH
+function unload_bin()
+{
+  local name="$1"
+  rm -f "${BASHME_BIN}/${name}"
+}
+
 # Load all modules
 function _load_all_modules()
 {

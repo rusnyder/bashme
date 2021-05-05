@@ -6,7 +6,7 @@ if ! hash kubectl &>/dev/null; then
   return
 fi
 
-export KUBECONFIG="$HOME/.kube/config:$HOME/.kube/mk/minikube:$HOME/.kube/eks/blue:$HOME/.kube/eks/preprod:$HOME/.kube/eks/demo:$HOME/.kube/eks/prod:$HOME/.kube/dev-data-pipeline.kubeconfig"
+export KUBECONFIG="$HOME/.kube/config:$HOME/.kube/mk/minikube:$HOME/.kube/eks/blue:$HOME/.kube/eks/preprod:$HOME/.kube/eks/demo:$HOME/.kube/eks/prod:$HOME/.kube/dev-dp.kubeconfig"
 
 # Add bash completion
 # shellcheck disable=SC1090

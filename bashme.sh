@@ -14,6 +14,19 @@ if [[ "$BASHME_ENABLE" != true ]]; then
   return
 fi
 
+# Load all library files
+LIB="${BASHME_HOME}/lib/*.sh"
+for lib in $LIB; do
+  if [[ "$BASHME_DEBUG" == true ]]; then
+    echo "[BASHME] Loading lib: $lib" >/dev/stderr
+  fi
+  # shellcheck disable=SC1090
+  . "$lib"
+done
+
+# Load bashme scripts onto the path
+export PATH="${BASHME_BIN}:${PATH}"
+
 # Load homebrew onto path first off (almost all modules depend on it)
 case "$(uname -m)" in
   # M1 Mac running native (ARM) terminal
@@ -29,19 +42,6 @@ BREW_PREFIX="$($BREW --prefix)"
 export PATH="${BREW_PREFIX}/bin:${BREW_PREFIX}/sbin:$PATH"
 unset BREW
 export BREW_PREFIX
-
-# Load bashme scripts onto the path
-export PATH="${BASHME_BIN}:${PATH}"
-
-# Load all library files
-LIB="${BASHME_HOME}/lib/*.sh"
-for lib in $LIB; do
-  if [[ "$BASHME_DEBUG" == true ]]; then
-    echo "[BASHME] Loading lib: $lib" >/dev/stderr
-  fi
-  # shellcheck disable=SC1090
-  . "$lib"
-done
 
 # Load all modules
 _load_all_modules

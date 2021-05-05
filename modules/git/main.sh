@@ -18,7 +18,6 @@ function __git_alias()
 __git_alias gs status
 __git_alias gco checkout
 __git_alias gu pull
-__git_alias glog glog
 __git_alias gfix "diff --name-only | uniq | xargs $EDITOR -"
 
 # Functions

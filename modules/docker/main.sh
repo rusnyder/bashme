@@ -28,6 +28,6 @@ alias docker-cmd="__docker_cmd"
 alias dca='docker-compose $(ls docker-compose*.yml | sort -r | xargs | gsed -e "s/\(^\| \)/\1-f /g")'
 
 ## Set the default docker platform to use x86 containers on M1 mac
-if [ "$(uname -m)" = "arm64" ]; then
-  export DOCKER_DEFAULT_PLATFORM="linux/amd64"
-fi
+#if [ "$(uname -m)" = "arm64" ]; then
+#export DOCKER_DEFAULT_PLATFORM="linux/amd64"
+#fi

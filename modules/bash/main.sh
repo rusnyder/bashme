@@ -32,5 +32,8 @@ export CLICOLOR=true
 
 # Run shellcheck from docker on M1 Macs (don't yet support shellcheck)
 if [ "$(uname -m)" = "arm64" ]; then
-  load_bin bash scripts/shellcheck
+  true
+  #function shellcheck() {
+  #  log_warn "Shellcheck not supported on M1 Macs"
+  #}
 fi
