@@ -62,9 +62,22 @@ eval "$(pyenv init -)"
 # Pyenv alias, for installing new python versions
 alias pyinstall='CFLAGS="-I$(xcrun --show-sdk-path)/usr/include" pyenv install -v'
 
-# Setup some pipenv aliases
-alias prun='pipenv run'
-alias pshell='pipenv shell --fancy'
+# Setup some poetry aliases
+function _poetry_env() {
+  # if POETRY_DONT_LOAD_ENV is *not* set, then load .env if it exists
+  if [[ -z "$POETRY_DONT_LOAD_ENV" && -f .env ]]; then
+    echo 'Loading .env environment variables…'
+    # shellcheck disable=SC2046
+    export $(grep -v '^#' .env | tr -d ' ' | xargs)
+    command poetry "$@"
+    # shellcheck disable=SC2046
+    unset $(grep -v '^#' .env | sed -E 's/(.*)=.*/\1/' | xargs)
+  else
+    command poetry "$@"
+  fi
+}
+alias pshell='_poetry_env run'
+alias pshell='_poetry_env shell'
 
 # Skip virtualenv-init command, as it causes conflicts w/ init command
 if pyenv commands | grep virtualenv-init > /dev/null; then
@@ -80,3 +93,5 @@ fi
 # Apache Airflow has a GPL-licensed dependency that we need to skip
 export SLUGIFY_USES_TEXT_UNIDECODE=yes
 
+# Disable virtualenv from modify the shell prompt (see ps1 module for handling of PS1)
+export VIRTUAL_ENV_DISABLE_PROMPT=1

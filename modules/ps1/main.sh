@@ -4,6 +4,19 @@
 load_module git
 
 # Functions
+parse_venv() {
+  if [[ -n "$VIRTUAL_ENV" ]]; then
+    local project
+    if [[ -f "${VIRTUAL_ENV}/.project" ]]; then
+      # Pipenv - adds .project file w/ prettier name
+      project="$(basename "$(cat "${VIRTUAL_ENV}/.project")")"
+    else
+      # All others - just use the venv directory name
+      project="${VIRTUAL_ENV##*/}"
+    fi
+    echo -n " [venv: $project]"
+  fi
+}
 
 build_ps1() {
   # Colors
@@ -19,15 +32,10 @@ build_ps1() {
   local timestamp="${gold}[\D{%F %T}]"
   local dir="${cyan}\w"
   local git="${green}\$(parse_git_branch)"
+  local venv="${red}\$(parse_venv)"
   local prompt="${grey}→ "
-  local venv=""
 
-  # Check for python virtualenv
-  if [[ -n "$VIRTUAL_ENV" ]]; then
-    venv="${red}[venv: $(basename "$(cat "${VIRTUAL_ENV}/.project")")]"
-  fi
-
-  echo -e "\n${arch} ${timestamp} ${dir}${git} ${venv}\n${prompt}"
+  echo -e "\n${arch} ${timestamp} ${dir}${git}${venv}\n${prompt}"
 }
 
 # Variables
