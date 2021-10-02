@@ -8,3 +8,6 @@ complete -C "${BREW_PREFIX}"/bin/terraform terraform
 
 # Load bin scripts onto path
 #export PATH="${MODULE_DIR}/bin:${PATH}"
+
+# Aliases
+alias tf="terraform"

@@ -47,7 +47,7 @@ case "$ARCH" in
     log_error "Unsupported arch '$ARCH'; skipping pyenv/poetry setup"
     ;;
 esac
-export PATH="$PYENV_ROOT/bin:$PATH"
+export PATH="$PYENV_ROOT/shims:$PATH"
 
 # Init the pyenv-virtualenv manager
 export WORKON_HOME="$HOME/.ve"
